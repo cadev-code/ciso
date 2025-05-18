@@ -1,0 +1,37 @@
+services:
+  db:
+    build: ./db
+    image: db_ciso
+    container_name: db
+    ports:
+      - 3306:3306
+    networks:
+      - ciso_network
+  server:
+    build: ./server
+    image: server_ciso
+    container_name: server
+    ports:
+      - 8086:8086
+    volumes:
+      - ./server:/app
+    depends_on:
+      - db
+    networks:
+      - ciso_network
+  client:
+    build: ./client
+    image: client_ciso
+    container_name: client
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client:/app
+    depends_on:
+      - server
+    networks:
+      - ciso_network
+
+networks:
+  ciso_network:
+    driver: bridge
