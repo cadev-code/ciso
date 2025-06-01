@@ -8,7 +8,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { onInputChange } from '@/helpers';
+import { FormEvent, useState } from 'react';
 import { Link } from 'react-router';
 
 interface LoginFormValue {
@@ -21,9 +22,6 @@ export const Login = () => {
     user: '',
     password: '',
   });
-
-  const inputOnChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setFormValue((current) => ({ ...current, [e.target.id]: e.target.value }));
 
   const [validForm, setValidForm] = useState(true);
 
@@ -55,7 +53,7 @@ export const Login = () => {
                   id="user"
                   type="text"
                   value={formValue.user}
-                  onChange={inputOnChange}
+                  onChange={(e) => onInputChange(e, setFormValue)}
                   required
                 />
               </div>
@@ -65,7 +63,7 @@ export const Login = () => {
                   id="password"
                   type="password"
                   value={formValue.password}
-                  onChange={inputOnChange}
+                  onChange={(e) => onInputChange(e, setFormValue)}
                   required
                 />
                 {!validForm && (
