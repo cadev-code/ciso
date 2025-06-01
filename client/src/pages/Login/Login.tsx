@@ -25,7 +25,7 @@ export const Login = () => {
 
   const [validForm, setValidForm] = useState(true);
 
-  const formOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (formValue.user.length < 4 || formValue.password.length < 8) {
@@ -45,7 +45,7 @@ export const Login = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={formOnSubmit}>
+          <form onSubmit={onFormSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="user">Usuario</Label>
