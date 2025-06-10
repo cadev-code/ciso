@@ -15,7 +15,7 @@ Este archivo contiene los cambios relevantes en la interfaz de usuario (React).
 - Sistema de rutas con React Router.
 - Página de login con validación de formulario.
 - Helper `onInputChange` para actualizar automáticamente el valor del estado de un formulario con cada cambio en los inputs.
-- Página para establecer contraseña de usuario, incluye componentes para validar existencia de usuario, formulario para establer contraseña.
+- Página para establecer contraseña de usuario, incluye componentes para validar existencia de usuario, formulario para establecer contraseña y confirmación de actualización de contraseña.
 
 ### Refactor
 
