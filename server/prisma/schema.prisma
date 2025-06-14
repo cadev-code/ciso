@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model areas {
+  id               Int             @id @default(autoincrement())
+  area             String          @db.VarChar(100)
+  certification_id Int?
+  certifications   certifications? @relation(fields: [certification_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "areas_ibfk_1")
+  documents        documents[]
+
+  @@index([certification_id], map: "certification_id")
+}
+
+model certifications {
+  id            Int     @id @default(autoincrement())
+  certification String  @db.VarChar(100)
+  site_id       Int?
+  areas         areas[]
+  sites         sites?  @relation(fields: [site_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "certifications_ibfk_1")
+
+  @@index([site_id], map: "site_id")
+}
+
+model documents {
+  id        Int         @id @default(autoincrement())
+  document  String      @db.VarChar(100)
+  code      String      @db.VarChar(50)
+  version   String      @db.VarChar(20)
+  path      String      @db.VarChar(255)
+  area_id   Int
+  areas     areas       @relation(fields: [area_id], references: [id], onUpdate: Restrict, map: "documents_ibfk_1")
+  evidences evidences[]
+
+  @@index([area_id], map: "area_id")
+}
+
+model evidences {
+  id          Int       @id @default(autoincrement())
+  document    String    @db.VarChar(100)
+  code        String    @db.VarChar(50)
+  version     String    @db.VarChar(20)
+  path        String    @db.VarChar(255)
+  document_id Int
+  documents   documents @relation(fields: [document_id], references: [id], onUpdate: Restrict, map: "evidences_ibfk_1")
+
+  @@index([document_id], map: "document_id")
+}
+
+model sites {
+  id             Int              @id @default(autoincrement())
+  site           String           @db.VarChar(100)
+  certifications certifications[]
+}
+
+model user_area_permissions {
+  id      Int    @id @default(autoincrement())
+  user_id Int?
+  area_id Int?
+  users   users? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_area_permissions_ibfk_1")
+
+  @@index([area_id], map: "area_id")
+  @@index([user_id], map: "user_id")
+}
+
+model user_certification_permissions {
+  id               Int    @id @default(autoincrement())
+  user_id          Int?
+  certification_id Int?
+  users            users? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_certification_permissions_ibfk_1")
+
+  @@index([certification_id], map: "certification_id")
+  @@index([user_id], map: "user_id")
+}
+
+model user_site_permissions {
+  id      Int    @id @default(autoincrement())
+  user_id Int?
+  site_id Int?
+  users   users? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_site_permissions_ibfk_1")
+
+  @@index([site_id], map: "site_id")
+  @@index([user_id], map: "user_id")
+}
+
+model users {
+  id                             Int                              @id @default(autoincrement())
+  full_name                      String                           @db.VarChar(100)
+  username                       String                           @db.VarChar(100)
+  password_token                 String                           @db.VarChar(255)
+  user_area_permissions          user_area_permissions[]
+  user_certification_permissions user_certification_permissions[]
+  user_site_permissions          user_site_permissions[]
+}
