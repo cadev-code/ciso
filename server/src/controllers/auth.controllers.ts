@@ -18,6 +18,10 @@ export const login = async (req: Request, res: Response) => {
           res.status(400).json({
             error: 'El usuario no existe',
           });
+        } else if (result[0].password_token === 'resetpassword1234') {
+          res.status(400).json({
+            error: 'Es necesario restablecer la contraseña',
+          });
         } else if (
           // Comprobar que la contraseña sea correcta
           await compareEncryptedPassword(password, result[0].password_token)
@@ -39,6 +43,37 @@ export const login = async (req: Request, res: Response) => {
           res.status(400).json({
             error: 'Contraseña incorrecta',
           });
+        }
+      });
+  } catch (error) {
+    res.status(400).json({
+      error,
+    });
+  }
+};
+
+// TODO: hacer commit --amend con el nuevo cambio donde se valida que la contraseña no sea resetpassword1234 al hacer login (comprobar que si funcione)
+
+export const createUser = async (req: Request, res: Response) => {
+  const { fullname, username } = req.body;
+
+  try {
+    await prisma.users
+      .findMany({ where: { username: username } })
+      .then(async (result) => {
+        // Comprobar que el usuario no exista
+        if (result.length > 0) {
+          res.status(400).json({
+            error: 'El usuario ya existe en la base',
+          });
+        } else {
+          try {
+            await prisma;
+          } catch (error) {
+            res.status(400).json({
+              error,
+            });
+          }
         }
       });
   } catch (error) {
